@@ -1,0 +1,10 @@
+class Program
+{
+declare char Nick[20];
+void main(void)
+{
+Nick = "Hello \"Bruh\"" + "K";
+return;
+}
+}
+

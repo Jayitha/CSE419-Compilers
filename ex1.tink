@@ -1,0 +1,8 @@
+class Program
+{
+declare int N;
+void main(void)
+{
+return;
+}
+}
