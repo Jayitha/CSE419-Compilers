@@ -1,0 +1,40 @@
+flex scanner.l
+bison -d --report=state parser.y
+gcc -o parser ast.c lex.yy.c parser.tab.c -lfl
+scanner.l: In function ‘yylex’:
+scanner.l:35:8: error: invalid type argument of ‘->’ (have ‘YYSTYPE {aka int}’)
+ [a-zA-Z_][a-zA-Z0-9_]*                          {yylval->stringLiteral = yytext;printf("Found: ID\n");return ID;}
+        ^~
+scanner.l:36:8: error: invalid type argument of ‘->’ (have ‘YYSTYPE {aka int}’)
+ [0-9]+                                          {yylval->intLiteral=atoi(yytext);printf("Found: INT_LITERAL\n");return INT_LITERAL;}
+        ^~
+scanner.l:41:8: error: invalid type argument of ‘->’ (have ‘YYSTYPE {aka int}’)
+ \"(\\.|[^"\\])*\"                               {yylval->stringLiteral = yytext;printf("Found: STRING_LITERAL: %s\n", yytext);return STRING_LITERAL;}
+        ^~
+parser.tab.c: In function ‘yyparse’:
+parser.tab.c:1349:16: warning: implicit declaration of function ‘yylex’ [-Wimplicit-function-declaration]
+       yychar = yylex ();
+                ^~~~~
+parser.y:133:45: error: expected expression before ‘)’ token
+ literal: INT_LITERAL {$$ = getASTNodeINTLiteral((void *));}
+                                             ^
+parser.y:134:38: warning: passing argument 1 of ‘getASTNodeCHARLiteral’ makes integer from pointer without a cast [-Wint-conversion]
+        | CHAR_LITERAL {$$ = getASTNodeCHARLiteral(yylval->stringLiteral);}
+                                      ^~~~~~
+In file included from parser.y:4:0:
+ast.h:80:24: note: expected ‘char’ but argument is of type ‘char *’
+ extern struct ASTNode *getASTNodeCHARLiteral(char val);
+                        ^~~~~~~~~~~~~~~~~~~~~
+parser.tab.c:1922:7: warning: implicit declaration of function ‘yyerror’; did you mean ‘yyerrok’? [-Wimplicit-function-declaration]
+       yyerror (YY_("syntax error"));
+       ^~~~~~~
+       yyerrok
+parser.y: At top level:
+parser.y:148:1: warning: return type defaults to ‘int’ [-Wimplicit-int]
+ yyerror(char *s)
+ ^~~~~~~
+parser.y:152:1: warning: return type defaults to ‘int’ [-Wimplicit-int]
+ main(int argc, char **argv)
+ ^~~~
+Makefile:2: recipe for target 'parser' failed
+make: *** [parser] Error 1

@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_CALC_TAB_H_INCLUDED
+# define YY_YY_CALC_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,59 +45,13 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ASSIGN = 258,
-    BOOL = 259,
-    BREAK = 260,
-    CALLOUT = 261,
-    CHAR = 262,
-    CHAR_LITERAL = 263,
-    CLASS = 264,
-    CLOSE_ANG = 265,
-    CLOSE_CURLY = 266,
-    CLOSE_PARAN = 267,
-    COLON = 268,
-    COMMA = 269,
-    CONTINUE = 270,
-    DECLARE = 271,
-    ELSE = 272,
-    FALSE = 273,
-    FOR = 274,
-    ID = 275,
-    IF = 276,
-    INT = 277,
-    INT_LITERAL = 278,
-    OPEN_ANG = 279,
-    OPEN_CURLY = 280,
-    OPEN_PARAN = 281,
-    PROGRAM = 282,
-    QM = 283,
-    RETURN = 284,
-    STRING_LITERAL = 285,
-    SEMICOLON = 286,
-    TRUE = 287,
-    UINT = 288,
-    VOID = 289,
-    WHILE = 290,
-    LOGICAL_OR = 291,
-    LOGICAL_AND = 292,
-    EQUALITY = 293,
-    NONEQUALITY = 294,
-    LESSTHAN = 295,
-    GREATERTHAN = 296,
-    LEQ = 297,
-    GEQ = 298,
-    SUB = 299,
-    ADD = 300,
-    MULTIPLY = 301,
-    DIVIDE = 302,
-    MODULO = 303,
-    LOGICAL_NOT = 304
+    INT_LITERAL = 258
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef  struct ASTNode *  YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -107,4 +61,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_CALC_TAB_H_INCLUDED  */

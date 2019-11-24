@@ -1,0 +1,3 @@
+flex scanner.l
+bison -d --report=state parser.y
+gcc -o parser ast.c lex.yy.c parser.tab.c -lfl
