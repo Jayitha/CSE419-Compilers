@@ -45,7 +45,7 @@ class                                                   {printf("Found: CLASS\n"
 :                                                       {printf("Found: COLON\n");return COLON;}
 ,                                                       {printf("Found: COMMA\n");return COMMA;}
 [a-zA-Z_][a-zA-Z0-9_]*                                  {printf("Found: ID\n");yylval = (struct ASTNode *)malloc(sizeof(struct ASTNode)); yylval->stringLiteral = (char *)malloc((strlen(yytext)+1)*sizeof(char)); strcpy(yylval->stringLiteral, yytext);return ID;}
-[0-9]+                                                  {printf("Found: INT_LITERAL\n");yylval = (struct ASTNode *)malloc(sizeof(struct ASTNode)); yylval->intLiteral=atoi(yytext); return INT_LITERAL;}
+-?[0-9]+                                                  {printf("Found: INT_LITERAL\n");yylval = (struct ASTNode *)malloc(sizeof(struct ASTNode)); yylval->intLiteral=atoi(yytext); return INT_LITERAL;}
 \[                                                      {printf("Found: OPEN_ANG\n");return OPEN_ANG;}
 \{                                                      {printf("Found: OPEN_CURLY\n");return OPEN_CURLY;}
 \(                                                      {printf("Found: OPEN_PARAN\n");return OPEN_PARAN;}

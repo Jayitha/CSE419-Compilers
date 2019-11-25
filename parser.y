@@ -8,7 +8,6 @@
 
 %token ASSIGN
 %token BOOL
-%token BREAK
 %token CALLOUT
 %token CHAR
 %token CHAR_LITERAL
@@ -18,7 +17,6 @@
 %token CLOSE_PARAN
 %token COLON
 %token COMMA
-%token CONTINUE
 %token DECLARE
 %token ELSE
 %token FALSE
@@ -32,11 +30,9 @@
 %token OPEN_PARAN
 %token PROGRAM
 %token QM
-%token RETURN
 %token STRING_LITERAL
 %token SEMICOLON
 %token TRUE
-%token UINT
 %token VOID
 %token WHILE
 
@@ -61,20 +57,16 @@ var_decl: DECLARE type location SEMICOLON {$$ = getASTNodeVarDecl($2, $3);}
 method_decls: method_decl method_decls {$$ = getASTNodeMethodDecls($1, $2);}
             | method_decl {$$ = getASTNodeMethodDecls($1, NULL);}
 ;
-method_decl: return_type ID OPEN_PARAN method_args CLOSE_PARAN block {$$ = getASTNodeMethodDecl($1, $2->stringLiteral, $4, $6);}
+method_decl: ID OPEN_PARAN method_args CLOSE_PARAN block {$$ = getASTNodeMethodDecl($1->stringLiteral, $3, $5);}
 ;
-return_type: VOID {$$ = getASTNodeReturnType(NULL, NULL, NULL, VOID_RETURNTYPE);}
-           | type {$$ = getASTNodeReturnType($1, NULL, NULL, NONVOID_RETURNTYPE);}
-           | type OPEN_ANG INT_LITERAL CLOSE_ANG {$$ = getASTNodeReturnType($1, $3, NULL, ARRAY_RETURNTYPE);}
-           | type OPEN_ANG INT_LITERAL CLOSE_ANG OPEN_ANG INT_LITERAL CLOSE_ANG {$$ = getASTNodeReturnType($1, $3, $6, MATRIX_RETURNTYPE);}
-;
+
 method_args: VOID {$$ = getASTNodeMethodArgs(NULL, NULL, VOID_METHODARGSTYPE);}
            | method_arg COMMA method_args {$$ = getASTNodeMethodArgs($1, $2, MULTIPLE_METHODARGSTYPE);}
            | method_arg {$$ = getASTNodeMethodArgs($1, NULL, NONVOID_METHODARGSTYPE);}
 ;
 method_arg: type ID {$$ = getASTNodeMethodArg($1, $2->stringLiteral, NULL, NULL, SINGLE_METHODARGTYPE);}
           | type ID OPEN_ANG INT_LITERAL CLOSE_ANG {$$ = getASTNodeMethodArg($1, $2->stringLiteral, $4, NULL, ARRAY_METHODARGTYPE);}
-          | type ID OPEN_ANG INT_LITERAL CLOSE_ANG OPEN_ANG INT_LITERAL CLOSE_ANG {$$ = getASTNodeMethodArg($1, $2->stringLiteral, $4, $7, MATRIX_METHODARGTYPE);}
+          | type ID OPEN_ANG INT_LITERAL CLOSE_ANG OPEN_ANG INT_LITERAL CLOSE_ANG {$$ = getASTNodeMethodArg($1, $2->intLiteral, $4, $7, MATRIX_METHODARGTYPE);}
 ;
 block: OPEN_CURLY var_decls statements CLOSE_CURLY {$$ = getASTNodeBlock($2, $3, BOTH_BLOCKTYPE);}
      | OPEN_CURLY statements CLOSE_CURLY {$$ = getASTNodeBlock(NULL, $2, STATEMENTS_ONLY_BLOCKTYPE);}
@@ -89,11 +81,7 @@ statement: location ASSIGN expr SEMICOLON {$$ = getASTNodeStatement($1, $3, NULL
          | expr QM block COLON block {$$ = getASTNodeStatement($1, $3, $5, NULL, NULL, TERNARY_STATEMENTTYPE);}
          | WHILE OPEN_PARAN expr CLOSE_PARAN block {$$ = getASTNodeStatement($3, $5, NULL, NULL, NULL, WHILE_STATEMENTTYPE);}
          | FOR OPEN_PARAN ID ASSIGN expr SEMICOLON expr SEMICOLON expr CLOSE_PARAN block {$$ = getASTNodeStatement($3, $5, $7, $9, $11, FOR_STATEMENTTYPE);}
-         | RETURN SEMICOLON {$$ = getASTNodeStatement(NULL, NULL, NULL, NULL, NULL, RETURN_NO_PARAMS_STATEMENTTYPE);}
-         | RETURN OPEN_PARAN expr CLOSE_PARAN SEMICOLON {$$ = getASTNodeStatement($3, NULL, NULL, NULL, NULL, RETURN_PARAMS_STATEMENTTYPE);}
-         | BREAK SEMICOLON {$$ = getASTNodeStatement(NULL, NULL, NULL, NULL, NULL, BREAK_STATEMENTTYPE);}
-         | CONTINUE SEMICOLON {$$ = getASTNodeStatement(NULL, NULL, NULL, NULL, NULL, CONTINUE_STATEMENTTYPE);}
-         | block {$$ = $1;} {$$ = getASTNodeStatement($1, NULL, NULL, NULL, NULL, BLOCK_STATEMENTTYPE);}
+         | block {$$ = getASTNodeStatement($1, NULL, NULL, NULL, NULL, BLOCK_STATEMENTTYPE);}
 ;
 if_else_statment: IF OPEN_PARAN expr CLOSE_PARAN block {$$ = getASTNodeIfElse($3, $5, NULL);}
                 | IF OPEN_PARAN expr CLOSE_PARAN block ELSE block {$$ = getASTNodeIfElse($3, $5, $7);}
@@ -105,7 +93,6 @@ callout_args: expr COMMA callout_args {$$ = getASTNodeCalloutArgs($1, $3);}
             | expr {$$ = getASTNodeCalloutArgs($1, NULL);}
 ;
 expr: location {$$ = getASTNodeExpr($1, NULL, LOCATION_EXPRTYPE);}
-    | method_call {$$ = getASTNodeExpr($1, NULL, METHOD_CALL_EXPRTYPE);}
     | literal {$$ = getASTNodeExpr($1, NULL, LITERAL_EXPRTYPE);}
     | expr ADD expr {$$ = getASTNodeExpr($1, $3, ADD_EXPRTYPE);}
     | expr SUB expr {$$ = getASTNodeExpr($1, $3, SUB_EXPRTYPE);}
@@ -139,7 +126,6 @@ bool_literal: TRUE {$$ = getASTNodeBOOLLiteral(TRUE_BOOL);}
 ;
 
 type: INT {$$ = getASTNodeType(INT_TYPETYPE);}
-    | UINT {$$ = getASTNodeType(UINT_TYPETYPE);}
     | BOOL {$$ = getASTNodeType(BOOL_TYPETYPE);}
     | CHAR {$$ = getASTNodeType(CHAR_TYPETYPE);}
 ;

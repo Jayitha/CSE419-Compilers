@@ -53,31 +53,17 @@ struct ASTNode *getASTNodeMethodDecls(struct ASTNode *method_decl,
 	return node;
 }
 
-struct ASTNode *getASTNodeMethodDecl(struct ASTNode *return_type,
-                                            char *id,
+struct ASTNode *getASTNodeMethodDecl(char *id,
 											struct ASTNode *method_args,
 										struct ASTNode *block)
 {
 	struct ASTNode *node;
 	node = (struct ASTNode *) malloc(sizeof(struct ASTNode));
 	node->nodetype = MethodDecl;
-	node->methodDeclNode.return_type = return_type;
 	node->methodDeclNode.id = strdup(id);
 	node->methodDeclNode.method_args = method_args;
 	node->methodDeclNode.block = block;
 
-	return node;
-}
-
-struct ASTNode *getASTNodeReturnType(struct ASTNode *return_type, struct ASTNode *index1, struct ASTNode *index2, returnType type)
-{
-	struct ASTNode *node;
-	node = (struct ASTNode *) malloc(sizeof(struct ASTNode));
-	node->nodetype = ReturnType;
-	node->returnTypeNode.return_type = return_type;
-	node->returnTypeNode.index1 = index1;
-	node->returnTypeNode.index2 = index2;
-	node->returnTypeNode.type = type;
 	return node;
 }
 
@@ -289,26 +275,10 @@ void printPostFix(struct ASTNode *root)
 
 		case MethodDecl:
 		{
-			printPostFix(root->methodDeclNode.return_type);
 			printf(" %s -> ID",root->methodDeclNode.id);
 			printPostFix(root->methodDeclNode.method_args);
 			printPostFix(root->methodDeclNode.block);
 			printf(" -> METHOD_DECLARATION");
-			break;
-		}
-
-		case ReturnType:
-		{
-			printPostFix(root->returnTypeNode.return_type);
-			printPostFix(root->returnTypeNode.index1);
-			printPostFix(root->returnTypeNode.index2);
-			switch(root->returnTypeNode.type)
-			{
-				case VOID_RETURNTYPE: ("-> VOID_RETURN_TYPE");break;
-				case NONVOID_RETURNTYPE: (" -> NONVOID_RETURN_TYPE");break;
-				case ARRAY_RETURNTYPE: (" -> ARRAY_RETURN_TYPE");break;
-				case MATRIX_RETURNTYPE: (" -> MATRIX_RETURN_TYPE");break;
-			}
 			break;
 		}
 
@@ -375,10 +345,6 @@ void printPostFix(struct ASTNode *root)
 				case TERNARY_STATEMENTTYPE: printf(" -> TERNARY_STATEMENT");break;
 				case WHILE_STATEMENTTYPE: printf(" -> WHILE_STATEMENT");break;
 				case FOR_STATEMENTTYPE: printf(" -> FOR_STATEMENT");break;
-				case RETURN_NO_PARAMS_STATEMENTTYPE: printf(" -> RETURN_NO_PARAMS_STATEMENT");break;
-				case RETURN_PARAMS_STATEMENTTYPE: printf(" -> RETURN_PARAMS_STATEMENT");break;
-				case BREAK_STATEMENTTYPE: printf(" -> BREAK_STATEMENT");break;
-				case CONTINUE_STATEMENTTYPE: printf(" -> CONTINUE_STATEMENT");break;
 				case BLOCK_STATEMENTTYPE: printf(" -> BLOCK_STATEMENT");break;
 			}
 			break;
@@ -415,7 +381,6 @@ void printPostFix(struct ASTNode *root)
 			switch(root->exprNode.type)
 			{
 				case LOCATION_EXPRTYPE: printf(" -> LOCATION_EXPRESSION");break;
-				case METHOD_CALL_EXPRTYPE: printf(" -> METHOD_CALL_EXPRESSION");break;
 				case LITERAL_EXPRTYPE: printf(" -> LITERAL_EXPRESSION");break;
 				case ADD_EXPRTYPE: printf(" -> ADD_EXPRESSION");break;
 				case SUB_EXPRTYPE: printf(" -> SUB_EXPRESSION");break;
@@ -482,10 +447,15 @@ void printPostFix(struct ASTNode *root)
 			switch(root->type)
 			{
 				case INT_TYPETYPE: printf("INT_TYPE");break;
-				case UINT_TYPETYPE: printf("UINT_TYPE");break;
 				case BOOL_TYPETYPE: printf("BOOL_TYPE");break;
 				case CHAR_TYPETYPE: printf("CHAR_TYPE");break;
 			}
 		}
 	}
 }
+
+
+
+
+
+

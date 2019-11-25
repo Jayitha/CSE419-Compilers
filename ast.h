@@ -7,7 +7,6 @@ typedef enum  astnodetype {
 	VarDecl, 
 	MethodDecls, 
 	MethodDecl, 
-	ReturnType, 
 	MethodArgs, 
 	MethodArg, 
 	Block,  
@@ -26,14 +25,13 @@ typedef enum  astnodetype {
  } ASTNodeType;
 
 typedef enum programtype {BOTH_PROGRAM, METHOD_DECLS_ONLY_PROGRAM, VAR_DECLS_ONLY_PROGRAM} programType;
-typedef enum returntype {VOID_RETURNTYPE, NONVOID_RETURNTYPE, ARRAY_RETURNTYPE, MATRIX_RETURNTYPE} returnType;
 typedef enum methodargstype {VOID_METHODARGSTYPE, NONVOID_METHODARGSTYPE, MULTIPLE_METHODARGSTYPE} methodArgsType;
 typedef enum methodargtypes {SINGLE_METHODARGTYPE, ARRAY_METHODARGTYPE, MATRIX_METHODARGTYPE} methodArgType;
 typedef enum locationtypes {SINGLE_LOCATIONTYPE, ARRAY_LOCATIONTYPE, MATRIX_LOCATIONTYPE} locationType;
 typedef enum blocktype {BOTH_BLOCKTYPE, STATEMENTS_ONLY_BLOCKTYPE, VAR_DECLS_ONLY_BLOCKTYPE} blockType;
-typedef enum statementtype {ASSIGNMENT_STATEMENTTYPE, METHOD_CALL_STATEMENTTYPE, IFTHENELSE_STATEMENTTYPE, TERNARY_STATEMENTTYPE, WHILE_STATEMENTTYPE, FOR_STATEMENTTYPE, RETURN_NO_PARAMS_STATEMENTTYPE, RETURN_PARAMS_STATEMENTTYPE, BREAK_STATEMENTTYPE, CONTINUE_STATEMENTTYPE, BLOCK_STATEMENTTYPE} statementType;
-typedef enum exprtype {LOCATION_EXPRTYPE, METHOD_CALL_EXPRTYPE, LITERAL_EXPRTYPE, ADD_EXPRTYPE, SUB_EXPRTYPE, MUL_EXPRTYPE, DIV_EXPRTYPE, MOD_EXPRTYPE, LEQ_EXPRTYPE, GEQ_EXPRTYPE, LESSTHAN_EXPRTYPE, GREATERTHAN_EXPRTYPE, EQUALITY_EXPRTYPE, NONEQUALITY_EXPRTYPE, LOGICAL_OR_EXPRTYPE, LOGICAL_AND_EXPRTYPE, UNISUB_EXPRTYPE, LOGICAL_NOT_EXPRTYPE, EXPR_PARAN_EXPRTYPE} exprType;
-typedef enum typetype {INT_TYPETYPE, UINT_TYPETYPE, BOOL_TYPETYPE, CHAR_TYPETYPE} typeType;
+typedef enum statementtype {ASSIGNMENT_STATEMENTTYPE, METHOD_CALL_STATEMENTTYPE, IFTHENELSE_STATEMENTTYPE, TERNARY_STATEMENTTYPE, WHILE_STATEMENTTYPE, FOR_STATEMENTTYPE,  BLOCK_STATEMENTTYPE} statementType;
+typedef enum exprtype {LOCATION_EXPRTYPE, LITERAL_EXPRTYPE, ADD_EXPRTYPE, SUB_EXPRTYPE, MUL_EXPRTYPE, DIV_EXPRTYPE, MOD_EXPRTYPE, LEQ_EXPRTYPE, GEQ_EXPRTYPE, LESSTHAN_EXPRTYPE, GREATERTHAN_EXPRTYPE, EQUALITY_EXPRTYPE, NONEQUALITY_EXPRTYPE, LOGICAL_OR_EXPRTYPE, LOGICAL_AND_EXPRTYPE, UNISUB_EXPRTYPE, LOGICAL_NOT_EXPRTYPE, EXPR_PARAN_EXPRTYPE} exprType;
+typedef enum typetype {INT_TYPETYPE, BOOL_TYPETYPE, CHAR_TYPETYPE} typeType;
 typedef enum booltype {TRUE_BOOL, FALSE_BOOL} boolType;
 extern struct ASTNode *getASTNodeProgram(struct ASTNode *var_decls,
 										struct ASTNode *method_decls,
@@ -48,12 +46,10 @@ extern struct ASTNode *getASTNodeVarDecl(struct ASTNode *type,
 extern struct ASTNode *getASTNodeMethodDecls(struct ASTNode *method_decl,
 										struct ASTNode *method_decls);
 
-extern struct ASTNode *getASTNodeMethodDecl(struct ASTNode *return_type,
+extern struct ASTNode *getASTNodeMethodDecl(
                                             char *id,
 											struct ASTNode *method_args,
 										struct ASTNode *block);
-
-extern struct ASTNode *getASTNodeReturnType(struct ASTNode *return_type, struct ASTNode *index1, struct ASTNode *index2, returnType type);
 
 extern struct ASTNode *getASTNodeMethodArgs(struct ASTNode *method_arg, struct ASTNode *method_args, methodArgsType type);
 
@@ -116,18 +112,10 @@ struct ASTNode {
 		} methodDeclsNode;
 
 		struct ASTMethodDecl {
-			struct ASTNode *return_type;
 			char *id;
 			struct ASTNode *method_args;
 			struct ASTNode *block;
 		} methodDeclNode;
-
-		struct ASTReturnType {
-			struct ASTNode *return_type;
-			struct ASTNode *index1;
-			struct ASTNode *index2;
-			returnType type;
-		} returnTypeNode;
 
 		struct ASTMethodArgs {
 			struct ASTNode *method_arg;
@@ -196,7 +184,7 @@ struct ASTNode {
 			bool value;
 			boolType type;
 		} BOOLLiteralNode;
-		
+
 		int intLiteral;
 		char charLiteral;
 		char *stringLiteral;
