@@ -84,7 +84,7 @@ struct ASTNode *getASTNodeMethodArg(struct ASTNode *id_type, char *id, struct AS
 	node = (struct ASTNode *) malloc(sizeof(struct ASTNode));
 	node->nodetype = MethodArg;
 	node->methodArgNode.id_type = id_type;
-	node->methodArgNode.id = strdup(id);
+	node->methodArgNode.id = id;
 	node->methodArgNode.index1 = index1;
 	node->methodArgNode.index2 = index2;
 	node->methodArgNode.type = type;
@@ -242,12 +242,6 @@ void printPostFix(struct ASTNode *root)
 		{
 			printPostFix(root->programNode.var_decls);
 			printPostFix(root->programNode.method_decls);
-			switch(root->programNode.type)
-			{
-				case BOTH_PROGRAM: printf("-> BOTH_PROGRAM");break;
-				case METHOD_DECLS_ONLY_PROGRAM: printf(" -> METHOD_DECLS_ONLY_PROGRAM");break;
-				case VAR_DECLS_ONLY_PROGRAM: printf(" -> VAR_DECLS_ONLY_PROGRAM"); break;
-			}
 			break;
 		}
 
@@ -262,7 +256,7 @@ void printPostFix(struct ASTNode *root)
 		{
 			printPostFix(root->varDeclNode.type);
 			printPostFix(root->varDeclNode.location);
-			printf(" -> VARIABLE_DECLARATION");
+			printf(" -> VARIABLE_DECLARATION\n");
 			break;
 		}
 
@@ -275,10 +269,10 @@ void printPostFix(struct ASTNode *root)
 
 		case MethodDecl:
 		{
-			printf(" %s -> ID",root->methodDeclNode.id);
+			printf(" %s -> ID\n",root->methodDeclNode.id);
 			printPostFix(root->methodDeclNode.method_args);
 			printPostFix(root->methodDeclNode.block);
-			printf(" -> METHOD_DECLARATION");
+			printf(" -> METHOD_DECLARATION\n");
 			break;
 		}
 
@@ -286,27 +280,16 @@ void printPostFix(struct ASTNode *root)
 		{
 			printPostFix(root->methodArgsNode.method_arg);
 			printPostFix(root->methodArgsNode.method_args);
-			switch(root->methodArgsNode.type)
-			{
-				case VOID_METHODARGSTYPE: printf(" -> VOID_METHOD_ARGUMENT");break;
-				case NONVOID_METHODARGSTYPE: printf(" -> SINGLE_NONVOID_ARGUMENT");break;
-				case MULTIPLE_METHODARGSTYPE: printf(" -> MULTIPLE_METHOD_ARGUMENTS");break;
-			}
 			break;
 		}
 
 		case MethodArg:
 		{
 			printPostFix(root->methodArgNode.id_type);
-			printf(" %s -> ID",root->methodArgNode.id);
+			// printf(" %s -> ID\n",root->methodArgNode.id);
 			printPostFix(root->methodArgNode.index1);
 			printPostFix(root->methodArgNode.index2);
-			switch(root->methodArgNode.type)
-			{
-				case SINGLE_METHODARGTYPE: printf(" -> ATOMIC_METHOD_ARG");break;
-				case ARRAY_METHODARGTYPE: printf(" -> ARRAY_METHOD_ARG");break;
-				case MATRIX_METHODARGTYPE: printf(" -> MATRIX_MATHOD_ARG");break;
-			}
+			printf(" -> METHOD_ARGS\n");
 			break;
 		}
 
@@ -314,12 +297,7 @@ void printPostFix(struct ASTNode *root)
 		{
 			printPostFix(root->blockNode.var_decls);
 			printPostFix(root->blockNode.statements);
-			switch(root->blockNode.type)
-			{
-				case BOTH_BLOCKTYPE: printf(" -> BOTH_BLOCK");break;
-				case STATEMENTS_ONLY_BLOCKTYPE: printf(" -> STATEMENTS_ONLY_BLOCK");break;
-				case VAR_DECLS_ONLY_BLOCKTYPE: printf(" -> VAR_DECLS_ONLY_BLOCK");break;
-			}
+			printf(" -> BLOCK\n");
 			break;
 		}
 
@@ -339,13 +317,14 @@ void printPostFix(struct ASTNode *root)
 			printPostFix(root->statementNode.arg5);
 			switch(root->statementNode.type)
 			{
-				case ASSIGNMENT_STATEMENTTYPE: printf(" -> ASSIGNMENT_STATEMENT");break;
-				case METHOD_CALL_STATEMENTTYPE: printf(" -> METHOD_CALL_STATEMENT");break;
-				case IFTHENELSE_STATEMENTTYPE: printf(" -> IFTHENELSE_STATEMENT");break;
-				case TERNARY_STATEMENTTYPE: printf(" -> TERNARY_STATEMENT");break;
-				case WHILE_STATEMENTTYPE: printf(" -> WHILE_STATEMENT");break;
-				case FOR_STATEMENTTYPE: printf(" -> FOR_STATEMENT");break;
-				case BLOCK_STATEMENTTYPE: printf(" -> BLOCK_STATEMENT");break;
+				case ASSIGNMENT_STATEMENTTYPE: printf(" -> ASSIGNMENT_STATEMENT\n");break;
+				//case METHOD_CALL_STATEMENTTYPE: printf(" -> METHOD_CALL_STATEMENT\n");break;
+				//case IFTHENELSE_STATEMENTTYPE: printf(" -> IFTHENELSE_STATEMENT\n");break;
+				case TERNARY_STATEMENTTYPE: printf(" -> TERNARY_STATEMENT\n");break;
+				case WHILE_STATEMENTTYPE: printf(" -> WHILE_STATEMENT\n");break;
+				case FOR_STATEMENTTYPE: printf(" -> FOR_STATEMENT\n");break;
+				//case BLOCK_STATEMENTTYPE: printf(" -> BLOCK_STATEMENT\n");break;
+				default: break;
 			}
 			break;
 		}
@@ -355,7 +334,7 @@ void printPostFix(struct ASTNode *root)
 			printPostFix(root->ifElseNode.ifexpr);
 			printPostFix(root->ifElseNode.then);
 			printPostFix(root->ifElseNode.elsethen);
-			printf(" -> IF_ELSE_STATEMENT");
+			printf(" -> IF_ELSE_STATEMENT\n");
 			break;
 		}
 
@@ -363,7 +342,7 @@ void printPostFix(struct ASTNode *root)
 		{
 			printPostFix(root->methodCallNode.functionName);
 			printPostFix(root->methodCallNode.args);
-			printf(" -> METHOD_CALL");
+			printf(" -> METHOD_CALL\n");
 			break;
 		}
 
@@ -380,75 +359,69 @@ void printPostFix(struct ASTNode *root)
 			printPostFix(root->exprNode.arg2);
 			switch(root->exprNode.type)
 			{
-				case LOCATION_EXPRTYPE: printf(" -> LOCATION_EXPRESSION");break;
-				case LITERAL_EXPRTYPE: printf(" -> LITERAL_EXPRESSION");break;
-				case ADD_EXPRTYPE: printf(" -> ADD_EXPRESSION");break;
-				case SUB_EXPRTYPE: printf(" -> SUB_EXPRESSION");break;
-				case MUL_EXPRTYPE: printf(" -> MUL_EXPRESSION");break;
-				case DIV_EXPRTYPE: printf(" -> DIV_EXPRESSION");break;
-				case MOD_EXPRTYPE: printf(" -> MOD_EXPRESSION");break;
-				case LEQ_EXPRTYPE: printf(" -> LEQ_EXPRESSION");break;
-				case GEQ_EXPRTYPE: printf(" -> GEQ_EXPRESSION");break;
-				case LESSTHAN_EXPRTYPE: printf(" -> LESSTHAN_EXPRESSION");break;
-				case GREATERTHAN_EXPRTYPE: printf(" -> GREATERTHAN_EXPRESSION");break;
-				case EQUALITY_EXPRTYPE: printf(" -> EQUALITY_EXPRESSION");break;
-				case NONEQUALITY_EXPRTYPE: printf(" -> NONEQUALITY_EXPRESSION");break;
-				case LOGICAL_OR_EXPRTYPE: printf(" -> LOGICAL_OR_EXPRESSION");break;
-				case LOGICAL_AND_EXPRTYPE: printf(" -> LOGICAL_AND_EXPRESSION");break;
-				case UNISUB_EXPRTYPE: printf(" -> UNISUB_EXPRESSION");break;
-				case LOGICAL_NOT_EXPRTYPE: printf(" -> LOGICAL_NOT_EXPRESSION");break;
-				case EXPR_PARAN_EXPRTYPE: printf(" -> EXPR_PARAN_EXPRESSION");break;
+				case LOCATION_EXPRTYPE: printf(" -> LOCATION_EXPRESSION\n");break;
+				case LITERAL_EXPRTYPE: printf(" -> LITERAL_EXPRESSION\n");break;
+				case ADD_EXPRTYPE: printf(" -> ADD_EXPRESSION\n");break;
+				case SUB_EXPRTYPE: printf(" -> SUB_EXPRESSION\n");break;
+				case MUL_EXPRTYPE: printf(" -> MUL_EXPRESSION\n");break;
+				case DIV_EXPRTYPE: printf(" -> DIV_EXPRESSION\n");break;
+				case MOD_EXPRTYPE: printf(" -> MOD_EXPRESSION\n");break;
+				case LEQ_EXPRTYPE: printf(" -> LEQ_EXPRESSION\n");break;
+				case GEQ_EXPRTYPE: printf(" -> GEQ_EXPRESSION\n");break;
+				case LESSTHAN_EXPRTYPE: printf(" -> LESSTHAN_EXPRESSION\n");break;
+				case GREATERTHAN_EXPRTYPE: printf(" -> GREATERTHAN_EXPRESSION\n");break;
+				case EQUALITY_EXPRTYPE: printf(" -> EQUALITY_EXPRESSION\n");break;
+				case NONEQUALITY_EXPRTYPE: printf(" -> NONEQUALITY_EXPRESSION\n");break;
+				case LOGICAL_OR_EXPRTYPE: printf(" -> LOGICAL_OR_EXPRESSION\n");break;
+				case LOGICAL_AND_EXPRTYPE: printf(" -> LOGICAL_AND_EXPRESSION\n");break;
+				case UNISUB_EXPRTYPE: printf(" -> UNISUB_EXPRESSION\n");break;
+				case LOGICAL_NOT_EXPRTYPE: printf(" -> LOGICAL_NOT_EXPRESSION\n");break;
+				case EXPR_PARAN_EXPRTYPE: printf(" -> EXPR_PARAN_EXPRESSION\n");break;
 			}
 			break;
 		}
 
 		case Location:
 		{
-			printf(" %s -> ID",root->locationNode.id);
+			printf(" %s -> ID\n",root->locationNode.id);
 			printPostFix(root->locationNode.index1);
 			printPostFix(root->locationNode.index2);
-			switch(root->locationNode.type)
-			{
-				case SINGLE_LOCATIONTYPE: printf(" -> SINGLE_LOCATION");break;
-				case ARRAY_LOCATIONTYPE: printf(" -> ARRAY_LOCATION");break;
-				case MATRIX_LOCATIONTYPE: printf(" -> MATRIX_LOCATION");break;
-			}
 			break;
 		}
 
 		case INTLiteral:
 		{
-			printf(" %d -> INT_LITERAL",root->intLiteral);
+			printf(" %d -> INT_LITERAL\n",root->intLiteral);
 			break;
 		}
 		case CHARLiteral:
 		{
-			printf(" %c -> CHAR_LITERAL", root->charLiteral);
+			printf(" %c -> CHAR_LITERAL\n", root->charLiteral);
 			break;
 		}
 		case BOOLLiteral:
 		{
 			switch(root->BOOLLiteralNode.type)
 			{
-				case TRUE_BOOL: printf(" TRUE -> BOOL_LIT");
+				case TRUE_BOOL: printf(" TRUE -> BOOL_LIT\n");
 				                break;
-				case FALSE_BOOL: printf(" FALSE -> BOOL_LIT");
+				case FALSE_BOOL: printf(" FALSE -> BOOL_LIT\n");
 				                break;
 			}
 			break;
 		}
         case STRINGLiteral:
 		{
-			printf(" %s -> STRING_LITERAL", root->stringLiteral);
+			printf(" %s -> STRING_LITERAL\n", root->stringLiteral);
 			break;
 		}
 		case Type:
 		{
 			switch(root->type)
 			{
-				case INT_TYPETYPE: printf("INT_TYPE");break;
-				case BOOL_TYPETYPE: printf("BOOL_TYPE");break;
-				case CHAR_TYPETYPE: printf("CHAR_TYPE");break;
+				case INT_TYPETYPE: printf("INT_TYPE\n");break;
+				case BOOL_TYPETYPE: printf("BOOL_TYPE\n");break;
+				case CHAR_TYPETYPE: printf("CHAR_TYPE\n");break;
 			}
 		}
 	}

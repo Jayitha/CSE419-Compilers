@@ -77,8 +77,9 @@ x+ -> Comma separated list of one or more occurrernces of x
 Version 2 is a CFG, metasyntax not used here
 
 ```
-program -> class Program { var_decls method_decls }
+program -> Program { var_decls method_decls }
          | class Program { method_decls }
+         | class Program {var_decls }
 
 var_decls -> var_decl var_decls 
            | var_decl
@@ -88,12 +89,7 @@ var_decl -> declare type location;
 method_decls -> method_decl method_decls 
               | method_decl
 
-method_decl -> return_type id(method_args) block
-
-return_type -> void
-             | type
-             | type [int_literal]
-             | type [int_literal][int_literal]
+method_decl -> id(method_args) block
 
 method_args -> void 
              | method_arg, method_args
@@ -105,6 +101,7 @@ method_arg -> type id
 
 block -> {var_decls statements}
        | { statements }
+       | {var_decls }
 
 statements -> statement statements 
             | statement
@@ -114,11 +111,7 @@ statement -> location = expr;
            | if_else_statement
            | expr ? block : block
            | while(expr) block
-           | for(id=expr; expr; expr) block
-           | return;
-           | return(expr);
-           | break;
-           | continue;
+           | for(expr; statement;) block
            | block
 
 if_else_statement -> if(expr) block
@@ -165,7 +158,6 @@ bool_literal -> true
 
 
 type -> int
-      | uint
       | bool
       | char
 
@@ -215,24 +207,24 @@ All binary operators except conditional operators and equality perators are left
 This is an example program that checks whether an input number is prime.
 
 ```
-1   class Program
+1   Program
 2   {
 3     void main(void)
 4     {
 5       declare int N;
 6       declare int i;
-7       callout("print", "Enter N: ");
+7       callout("write", "Enter N: ");
 8       N = callout("read", "int");
 9       if(N == 1)
 10      {
 11        callout("print", "1 is neither prime nor composite");
-12        return;
+12        
 13      }
-14      callout("print", "int", N);
+14      callout("print", N, "int");
 15      if(N == 2 || N == 3)
 16      {
 17        callout("print", " is a prime number");
-18        return;
+18        
 19      }
 20 
 21      for(i = 2; i <= N / 2; i = i + 1)
@@ -240,11 +232,11 @@ This is an example program that checks whether an input number is prime.
 23        if(N % i == 0)
 24        {
 25          callout("print", " is NOT a prime number");
-26          return;
+26          
 27        }
 28      }
 29      callout("print", "is a prime number");
-30      return;
+30      
 31    }
 32  }
 ```

@@ -1,0 +1,39 @@
+Program
+{
+    declare int N;
+    main(void)
+    {
+        declare int i;
+        declare int flag;
+        N = 4;
+        if(N == 1)
+        {
+            callout("write","1 is neither prime nor composite");
+        }
+        else
+        {
+            if(N == 2)
+            {
+                callout("write","Prime.");
+            }
+            else
+            {
+                i = 2;
+                flag = 1;
+                for(i < N; i = i + 1;)
+                {
+                    if(N % i == 0)
+                    {
+                        flag = 0;
+                        callout("write", "Composite");
+                    }
+                }
+                if(flag == 1)
+                {
+                    callout("write","Prime");
+                }
+                
+            }
+        }
+    }
+}

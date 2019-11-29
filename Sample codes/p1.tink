@@ -1,0 +1,28 @@
+Program
+{
+    declare int N;
+    declare int k;
+    declare int answer;
+    main(void)
+    {
+        declare int i;
+        declare int j;
+        declare int a;
+        N = 2;
+        k = 2;
+        answer = 0;
+        i = 1;
+        for(i <= N; i = i + 1;)
+        {
+            a = 1;
+            j = 1;
+            for(j <= k; j = j + 1;)
+            {
+                a = a * i;
+            }
+            answer = answer + a;
+        }
+        callout("write", answer, "int");
+    }
+
+}

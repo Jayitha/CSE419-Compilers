@@ -1,4 +1,0 @@
-flex scanner.lflex scanner.l bison -d --report=state parser.y gcc -o 
-parser ast.c lex.yy.c parser.tab.c -lfl Makefile:2: recipe for target 
-'parser' failed bison -d --report=state parser.y gcc -o parser ast.c 
-lex.yy.c parser.tab.c -lfl Makefile:2: recipe for target 'parser' failed

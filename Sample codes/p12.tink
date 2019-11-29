@@ -1,0 +1,24 @@
+Program
+{
+    declare int A;
+    declare int a;
+    declare int b;
+    max(void)
+    {
+        if( a >= b)
+        {
+            A = a;
+        }
+        else
+        {
+            A = b;
+        }
+    }
+    main(void)
+    {
+        a = 1;
+        b = 2;
+        callout("max");
+        callout("write", A, "int");
+    }
+}

@@ -1,0 +1,4 @@
+Program
+{
+    declare int A[10][10];
+}
